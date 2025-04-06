@@ -1,5 +1,7 @@
+import Meals from "./Meals";
+
 function App() {
-  return <div>Meals API Project</div>;
+  return <Meals/>;
 }
 
 export default App;
