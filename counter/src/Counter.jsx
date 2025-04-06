@@ -20,8 +20,8 @@ function Counter() {
         </div>
 
         <div className="btns-container">
+            <button onClick={decrement} className="control">-</button> 
             <button onClick={increment} className="control">+</button>
-            <button onClick={decrement}  className="control">-</button> 
         </div>
       </div>
     </div>
