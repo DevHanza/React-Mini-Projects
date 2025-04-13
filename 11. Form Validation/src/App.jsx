@@ -1,12 +1,12 @@
-import React from 'react';
-import FormValidation from "./FormValidation"
+import React from "react";
+import FormValidation from "./FormValidation";
 
 function App() {
   return (
     <div>
-      <FormValidation/>
+      <FormValidation />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
