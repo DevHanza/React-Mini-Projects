@@ -51,7 +51,7 @@ jobs:
             cd ..
 
             mkdir -p "output/$project"
-            cp -r "$project/build/." "output/$project/"
+            cp -r "$project/dist/." "output/$project/"
           done
 
       - name: Deploy to `docs` branch
