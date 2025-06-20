@@ -22,8 +22,8 @@ jobs:
       - name: Build all React projects
         run: |
           projects=(
-            "01-Tic-Tac-Toe"
-            "02-Searchable-Product-Data-Table"
+            "01. Tic-Tac-Toe"
+            "02. Searchable-Product-Data-Table"
             "03. Counter"
             "04. ToDo-App"
             "05. Meals-API-Project"
@@ -51,7 +51,7 @@ jobs:
             cd ..
 
             mkdir -p "output/$project"
-            cp -r "$project/build/." "output/$project/"
+            cp -r "$project/dist/." "output/$project/"
           done
 
       - name: Deploy to `docs` branch
