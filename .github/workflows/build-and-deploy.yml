@@ -1,0 +1,69 @@
+name: Build and Deploy React Projects to GitHub Pages (docs branch)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Build all React projects
+        run: |
+          projects=(
+            "01-Tic-Tac-Toe"
+            "02-Searchable-Product-Data-Table"
+            "03. Counter"
+            "04. ToDo-App"
+            "05. Meals-API-Project"
+            "06. Calculator"
+            "07. Toggle-Background-Color"
+            "08. Hidden-Search-Bar"
+            "09. Testimonials"
+            "10. Accordions"
+            "11. Form Validation/v1"
+          )
+
+          rm -rf output
+          mkdir -p output
+
+          for project in "${projects[@]}"; do
+            echo "Building $project"
+            cd "$project"
+            npm install
+
+            # Add homepage for GitHub Pages
+            homepage="https://$GITHUB_REPOSITORY_OWNER.github.io/$project"
+            npx json -I -f package.json -e "this.homepage=\"$homepage\""
+
+            npm run build
+            cd ..
+
+            mkdir -p "output/$project"
+            cp -r "$project/build/." "output/$project/"
+          done
+
+      - name: Deploy to `docs` branch
+        run: |
+          cd output
+          git init
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git checkout -b docs
+
+          touch .nojekyll  # Avoid GitHub Pages ignoring folders starting with underscore
+          git add .
+          git commit -m "Deploy React projects to GitHub Pages [docs branch]"
+          git push --force origin docs
