@@ -22,8 +22,8 @@ jobs:
       - name: Build all React projects
         run: |
           projects=(
-            "01-Tic-Tac-Toe"
-            "02-Searchable-Product-Data-Table"
+            "01. Tic-Tac-Toe"
+            "02. Searchable-Product-Data-Table"
             "03. Counter"
             "04. ToDo-App"
             "05. Meals-API-Project"
