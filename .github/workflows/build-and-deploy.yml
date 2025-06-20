@@ -44,7 +44,8 @@ jobs:
             npm install
 
             # Add homepage for GitHub Pages
-            homepage="https://$GITHUB_REPOSITORY_OWNER.github.io/$project"
+            repo_name="${GITHUB_REPOSITORY#*/}"
+            homepage="https://$GITHUB_REPOSITORY_OWNER.github.io/$repo_name/$project"
             npx json -I -f package.json -e "this.homepage=\"$homepage\""
 
             npm run build
