@@ -16,7 +16,10 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Build all React projects
+      - name: Install json tool for config edits
+        run: npm install -g json
+
+      - name: Build all Vite React projects
         run: |
           projects=(
             "01. Tic-Tac-Toe"
@@ -35,15 +38,21 @@ jobs:
           rm -rf output
           mkdir -p output
 
+          repo_name="${GITHUB_REPOSITORY#*/}"
+
           for project in "${projects[@]}"; do
-            echo "Building $project"
+            echo "========================"
+            echo "📦 Building $project"
+            echo "========================"
+
             cd "$project"
             npm install
 
-            # Add homepage for GitHub Pages
-            repo_name="${GITHUB_REPOSITORY#*/}"
-            homepage="https://$GITHUB_REPOSITORY_OWNER.github.io/$repo_name/$project"
-            npx json -I -f package.json -e "this.homepage=\"$homepage\""
+            # Inject Vite config with correct base path
+            base="/$repo_name/$project/"
+            echo "import { defineConfig } from 'vite';" > vite.config.js
+            echo "import react from '@vitejs/plugin-react';" >> vite.config.js
+            echo "export default defineConfig({ base: '$base', plugins: [react()] });" >> vite.config.js
 
             npm run build
             cd ..
@@ -61,7 +70,7 @@ jobs:
           git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           git checkout -b docs
 
-          touch .nojekyll  # Avoid GitHub Pages ignoring folders starting with underscore
+          touch .nojekyll
           git add .
           git commit -m "Deploy React projects to GitHub Pages [docs branch]"
           git push --force origin docs
