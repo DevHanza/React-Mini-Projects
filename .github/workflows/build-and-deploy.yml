@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install json tool
+      - name: Install json CLI (optional if needed later)
         run: npm install -g json
 
       - name: Build all Vite React projects
@@ -39,23 +39,28 @@ jobs:
           rm -rf output
           mkdir -p output
 
-          echo "$PROJECT_LIST" | while IFS= read -r project; do
+          while IFS= read -r project; do
+            [ -z "$project" ] && continue  # Skip empty lines
+
+            echo "========================"
             echo "📦 Building $project"
+            echo "========================"
+
             cd "$project"
             npm install
 
-            # Inject vite.config.js with correct base
+            # Inject vite.config.js with correct base path
             base="/$repo_name/$project/"
             echo "import { defineConfig } from 'vite';" > vite.config.js
             echo "import react from '@vitejs/plugin-react';" >> vite.config.js
             echo "export default defineConfig({ base: '$base', plugins: [react()] });" >> vite.config.js
 
-            npm run build
+            npx vite build
             cd ..
 
             mkdir -p "output/$project"
             cp -r "$project/dist/." "output/$project/"
-          done
+          done <<< "$PROJECT_LIST"
 
       - name: Deploy to `docs` branch
         run: |
@@ -79,8 +84,8 @@ jobs:
           echo ""
 
           repo_name="${GITHUB_REPOSITORY#*/}"
-          echo "$PROJECT_LIST" | while IFS= read -r project; do
+          while IFS= read -r project; do
+            [ -z "$project" ] && continue
             encoded_project=$(echo "$project" | sed 's/ /%20/g')
-            url="https://${GITHUB_REPOSITORY_OWNER}.github.io/${repo_name}/${encoded_project}/"
-            echo "🌐 $project → $url"
-          done
+            echo "🌐 $project → https://${GITHUB_REPOSITORY_OWNER}.github.io/${repo_name}/${encoded_project}/"
+          done <<< "$PROJECT_LIST"
