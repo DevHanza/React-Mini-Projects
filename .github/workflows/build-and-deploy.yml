@@ -3,6 +3,20 @@ name: Build and Deploy React Projects to GitHub Pages (docs branch)
 on:
   workflow_dispatch:
 
+env:
+  PROJECT_LIST: |
+    01. Tic-Tac-Toe
+    02. Searchable-Product-Data-Table
+    03. Counter
+    04. ToDo-App
+    05. Meals-API-Project
+    06. Calculator
+    07. Toggle-Background-Color
+    08. Hidden-Search-Bar
+    09. Testimonials
+    10. Accordions
+    11. Form Validation
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,39 +30,21 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install json tool for config edits
+      - name: Install json tool
         run: npm install -g json
 
       - name: Build all Vite React projects
         run: |
-          projects=(
-            "01. Tic-Tac-Toe"
-            "02. Searchable-Product-Data-Table"
-            "03. Counter"
-            "04. ToDo-App"
-            "05. Meals-API-Project"
-            "06. Calculator"
-            "07. Toggle-Background-Color"
-            "08. Hidden-Search-Bar"
-            "09. Testimonials"
-            "10. Accordions"
-            "11. Form Validation"
-          )
-
+          repo_name="${GITHUB_REPOSITORY#*/}"
           rm -rf output
           mkdir -p output
 
-          repo_name="${GITHUB_REPOSITORY#*/}"
-
-          for project in "${projects[@]}"; do
-            echo "========================"
+          echo "$PROJECT_LIST" | while IFS= read -r project; do
             echo "📦 Building $project"
-            echo "========================"
-
             cd "$project"
             npm install
 
-            # Inject Vite config with correct base path
+            # Inject vite.config.js with correct base
             base="/$repo_name/$project/"
             echo "import { defineConfig } from 'vite';" > vite.config.js
             echo "import react from '@vitejs/plugin-react';" >> vite.config.js
@@ -74,3 +70,17 @@ jobs:
           git add .
           git commit -m "Deploy React projects to GitHub Pages [docs branch]"
           git push --force origin docs
+
+      - name: Print deployed project URLs
+        run: |
+          echo ""
+          echo "✅ Deployment Complete!"
+          echo "🔗 Project URLs:"
+          echo ""
+
+          repo_name="${GITHUB_REPOSITORY#*/}"
+          echo "$PROJECT_LIST" | while IFS= read -r project; do
+            encoded_project=$(echo "$project" | sed 's/ /%20/g')
+            url="https://${GITHUB_REPOSITORY_OWNER}.github.io/${repo_name}/${encoded_project}/"
+            echo "🌐 $project → $url"
+          done
