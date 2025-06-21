@@ -1,9 +1,6 @@
 name: Build and Deploy React Projects to GitHub Pages (docs branch)
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
