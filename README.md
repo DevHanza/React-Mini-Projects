@@ -13,3 +13,4 @@
 - 🌐 09. Testimonials → https://DevHanza.github.io/React-Mini-Projects/09.%20Testimonials/
 - 🌐 10. Accordions → https://DevHanza.github.io/React-Mini-Projects/10.%20Accordions/
 - 🌐 11. Form Validation → https://DevHanza.github.io/React-Mini-Projects/11.%20Form%20Validation/
+- 🌐 12. Youtube Channel Page Clone → https://DevHanza.github.io/React-Mini-Projects/12.%20Youtube%20Channel%20Page%20Clone/
