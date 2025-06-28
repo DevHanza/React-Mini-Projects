@@ -16,6 +16,7 @@ env:
     09. Testimonials
     10. Accordions
     11. Form Validation
+    12. Youtube Channel Page Clone
 
 jobs:
   build:
